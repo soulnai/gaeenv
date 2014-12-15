@@ -5,18 +5,29 @@ import re
 from utils import logger
 
 def add_gae_pth(env_dir):
-	site_packages_dir = os.path.join(
+	site_packages_dir_windows = os.path.join(
 		env_dir, 
+		'lib', 'site-packages')
+
+	site_packages_dir = os.path.join(
+		env_dir,
 		'lib', 'python{0}.{1}'.format(sys.version_info.major, sys.version_info.minor),
 		'site-packages')
 
-	if not os.path.exists(site_packages_dir):
+	if not os.path.exists(site_packages_dir_windows) and not os.path.exists(site_packages_dir):
 		logger.error('Python site packages directory doesn\'t exist. Please ensure Virtualenv is activated.')
 	else:
-		with open(os.path.join(site_packages_dir, 'gae.pth'), 'wb') as file:
-			file.write((
-				'../../google_appengine\n'
-				'import dev_appserver; dev_appserver.fix_sys_path()'))
+		if os.path.exists(site_packages_dir_windows):
+			with open(os.path.join(site_packages_dir_windows, 'gae.pth'), 'wb') as file:
+				file.write((
+					'../google_appengine\n'
+					'import dev_appserver; dev_appserver.fix_sys_path()'))
+		elif os.path.exists(site_packages_dir):
+			with open(os.path.join(site_packages_dir, 'gae.pth'), 'wb') as file:
+				file.write((
+					'../../google_appengine\n'
+					'import dev_appserver; dev_appserver.fix_sys_path()'))
+
 
 	logger.info(' * App Engine SDK path added to Python site packages')
 
@@ -64,10 +75,15 @@ def add_gae_activation(env_dir):
 		'\n'
 		'# === GAEENV END ===\n')
 
-	activate_script = os.path.join(env_dir, 'bin', 'activate')
-	if not os.path.exists(activate_script):
+	activate_script_windows = os.path.join(env_dir, 'Scripts', 'activate')
+	activate_script_unix = os.path.join(env_dir, 'bin', 'activate')
+	if not os.path.exists(activate_script_unix) and not os.path.exists(activate_script_windows):
 		logger.error('Virtualenv activation script doesn\'t exist. Please ensure Virtualenv is activated')
 	else:
+		if os.path.exists(activate_script_unix):
+			activate_script = activate_script_unix
+		else:
+			activate_script = activate_script_windows
 		source_code = ''
 		with open(activate_script, 'r') as file:
 			source_code = file.read()
@@ -81,10 +97,15 @@ def add_gae_activation(env_dir):
 
 
 def remove_gae_activation(env_dir):
-	activate_script = os.path.join(env_dir, 'bin', 'activate')
-	if not os.path.exists(activate_script):
+	activate_script_windows = os.path.join(env_dir, 'Scripts', 'activate')
+	activate_script_unix = os.path.join(env_dir, 'bin', 'activate')
+	if not os.path.exists(activate_script_unix) and not os.path.exists(activate_script_windows):
 		logger.error('Virtualenv activation script does\'t exist. Please ensure Virtualenv is activated')
 	else:
+		if os.path.exists(activate_script_unix):
+			activate_script = activate_script_unix
+		else:
+			activate_script = activate_script_windows
 		source_code = ''
 		with open(activate_script, 'r') as file:
 			source_code = file.read()

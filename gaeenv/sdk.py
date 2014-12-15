@@ -82,7 +82,7 @@ def get_latest_version():
 	"""
 	global __latest_version
 	if not __latest_version:
-		response = requests.get('https://code.google.com/p/googleappengine/downloads/list?can=2&q=&colspec=Filename')
+		response = requests.get('https://code.google.com/p/googleappengine/downloads/list?can=1&q=&colspec=Filename')
 		response.raise_for_status()
 		
 		match = re.search(r'google_appengine_([0-9]+)\.([0-9]+)\.([0-9]+)\.zip', response.text)
