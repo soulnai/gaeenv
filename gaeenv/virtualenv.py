@@ -75,15 +75,10 @@ def add_gae_activation(env_dir):
 		'\n'
 		'# === GAEENV END ===\n')
 
-	activate_script_windows = os.path.join(env_dir, 'Scripts', 'activate')
-	activate_script_unix = os.path.join(env_dir, 'bin', 'activate')
-	if not os.path.exists(activate_script_unix) and not os.path.exists(activate_script_windows):
+	activate_script = get_platform_relevant_path(env_dir)
+	if not os.path.exists(activate_script):
 		logger.error('Virtualenv activation script doesn\'t exist. Please ensure Virtualenv is activated')
 	else:
-		if os.path.exists(activate_script_unix):
-			activate_script = activate_script_unix
-		else:
-			activate_script = activate_script_windows
 		source_code = ''
 		with open(activate_script, 'r') as file:
 			source_code = file.read()
@@ -97,15 +92,10 @@ def add_gae_activation(env_dir):
 
 
 def remove_gae_activation(env_dir):
-	activate_script_windows = os.path.join(env_dir, 'Scripts', 'activate')
-	activate_script_unix = os.path.join(env_dir, 'bin', 'activate')
-	if not os.path.exists(activate_script_unix) and not os.path.exists(activate_script_windows):
+	activate_script = get_platform_relevant_path(env_dir)
+	if not os.path.exists(activate_script):
 		logger.error('Virtualenv activation script does\'t exist. Please ensure Virtualenv is activated')
 	else:
-		if os.path.exists(activate_script_unix):
-			activate_script = activate_script_unix
-		else:
-			activate_script = activate_script_windows
 		source_code = ''
 		with open(activate_script, 'r') as file:
 			source_code = file.read()
@@ -113,3 +103,9 @@ def remove_gae_activation(env_dir):
 		source_code = re.sub(r'# === GAEENV START ===.*?# === GAEENV END ===', '', source_code, flags=re.DOTALL)
 		with open(activate_script, 'wb') as file:
 			file.write(source_code)
+
+def get_platform_relevant_path(env_dir):
+	if os.name == 'nt':
+		return os.path.join(env_dir, 'Scripts', 'activate')
+	else:
+		return os.path.join(env_dir, 'bin', 'activate')

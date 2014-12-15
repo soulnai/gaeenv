@@ -151,7 +151,7 @@ def install_requirements(args):
     # validate virtualenv directory
     virtual_env_dir = os.environ.get(VIRTUAL_ENV)
     if not virtual_env_dir:
-        logger.error("Virtualenv doesn't exist. Please ensure one is activated.")
+        logger.error("Virtual environment is not activate. Please ensure one is activated.")
         sys.exit(1)
 
     # validate requirements file

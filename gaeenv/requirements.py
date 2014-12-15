@@ -7,11 +7,11 @@ import pkg_resources
 from distutils.sysconfig import get_python_lib
 from utils import logger
 
-__CSL = None
+
 def winlink(source, link_name):
     '''symlink(source, link_name)
        Creates a symbolic link pointing to source named link_name'''
-    global __CSL
+    __CSL = None
     if __CSL is None:
         import ctypes
         csl = ctypes.windll.kernel32.CreateSymbolicLinkW

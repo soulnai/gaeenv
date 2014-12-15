@@ -7,14 +7,14 @@ import logging
 
 def test_latest_sdk_version():
     #execute
-    func_response = sdk.get_latest_version()
+    latest_version = sdk.get_latest_version()
     #result
-    assert func_response == ("1", "8", "9")
+    assert latest_version == ("1", "8", "9")
 
 
 def test_create_logger():
     #execute
-    func_response = utils.create_logger()
+    is_logger = utils.create_logger()
     #result
-    assert type(func_response) == logging._loggerClass
+    assert type(is_logger) == logging._loggerClass
 
