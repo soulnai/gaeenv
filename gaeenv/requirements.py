@@ -8,7 +8,7 @@ from distutils.sysconfig import get_python_lib
 from utils import logger
 
 __CSL = None
-def symlink(source, link_name):
+def winlink(source, link_name):
     '''symlink(source, link_name)
        Creates a symbolic link pointing to source named link_name'''
     global __CSL
@@ -24,7 +24,6 @@ def symlink(source, link_name):
     if __CSL(link_name, source, flags) == 0:
         raise ctypes.WinError()
 
-os.symlink = symlink
 
 def list(req_file):
 	with open(req_file, 'r') as file:
@@ -79,9 +78,9 @@ def link(req_file, lib_dir):
 				dest = os.path.join(libs, link)
 
 			if os.path.exists(symlink) and not os.path.exists(dest):
-				#kdll = ctypes.windll.LoadLibrary("kernel32.dll")
-
-				#kdll.CreateSymbolicLinkA(symlink, dest, 0)
-				os.symlink(symlink, dest)
+				if os.name == 'nt':
+					winlink(symlink, dest)
+				else:
+					os.symlink(symlink, dest)
 
 			logger.info(' * Found and linked: %s' % link)
