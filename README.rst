@@ -55,6 +55,9 @@ Usage
 
 Basic
 ^^^^^
+Important note - if you are running gaeenv on Windows platform:
+    - make sure you are working in cygwin environment
+    - cygwin console should be started with Administrator privilegies (it's required for symlink creation in Windows) or you can change it in System Permissions for everyone
 
 Activate existing environment::
 
