@@ -6,7 +6,7 @@ from utils import logger
 
 
 def add_gae_pth(env_dir):
-    if os.name == 'nt':
+    if is_windows():
         site_packages_dir = os.path.join(env_dir, 'lib', 'site-packages')
         path_to_gae_pth = '../google_appengine\n'\
                           'import dev_appserver; dev_appserver.fix_sys_path()'
@@ -68,7 +68,7 @@ def add_gae_activation(env_dir):
         '\n'
         '# === GAEENV END ===\n')
 
-    activate_script = path_to_activate_script(env_dir)
+    activate_script = get_activate_script_path(env_dir)
     if not os.path.exists(activate_script):
         logger.error('Virtualenv activation script doesn\'t exist. Please ensure Virtualenv is activated')
     else:
@@ -85,7 +85,7 @@ def add_gae_activation(env_dir):
 
 
 def remove_gae_activation(env_dir):
-    activate_script = path_to_activate_script(env_dir)
+    activate_script = get_activate_script_path(env_dir)
     if not os.path.exists(activate_script):
         logger.error('Virtualenv activation script does\'t exist. Please ensure Virtualenv is activated')
     else:
@@ -98,8 +98,15 @@ def remove_gae_activation(env_dir):
             file.write(source_code)
 
 
-def path_to_activate_script(env_dir):
-    if os.name == 'nt':
+def get_activate_script_path(env_dir):
+    if is_windows():
         return os.path.join(env_dir, 'Scripts', 'activate')
     else:
         return os.path.join(env_dir, 'bin', 'activate')
+
+
+def is_windows():
+    if os.name == 'nt':
+        return True
+    else:
+        return False
