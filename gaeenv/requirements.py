@@ -11,17 +11,16 @@ from utils import logger
 def winlink(source, link_name):
     '''symlink(source, link_name)
        Creates a symbolic link pointing to source named link_name'''
-    __CSL = None
-    if __CSL is None:
-        import ctypes
-        csl = ctypes.windll.kernel32.CreateSymbolicLinkW
-        csl.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
-        csl.restype = ctypes.c_ubyte
-        __CSL = csl
+
+    import ctypes
+    csl = ctypes.windll.kernel32.CreateSymbolicLinkW
+    csl.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
+    csl.restype = ctypes.c_ubyte
+
     flags = 0
     if source is not None and os.path.isdir(source):
         flags = 1
-    if __CSL(link_name, source, flags) == 0:
+    if source(link_name, source, flags) == 0:
         raise ctypes.WinError()
 
 
@@ -83,7 +82,11 @@ def link(req_file, lib_dir):
                                 logger.error(' * Unable to link [%s] because a file already exists at [%s]' % (pkg, sym_path))
                         else:
                                 logger.info(' * Linking [%s] in [%s]' % (pkg_path, sym_path))
-                                if os.name == 'nt':
-                                    winlink(pkg_path, sym_path)
-                                else:
-                                    os.symlink(pkg_path, sym_path)
+                                make_symlink(pkg_path, sym_path)
+
+
+def make_symlink(pkg_path, sym_path):
+    if os.name == 'nt':
+        winlink(pkg_path, sym_path)
+    else:
+        os.symlink(pkg_path, sym_path)

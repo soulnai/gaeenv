@@ -68,7 +68,7 @@ def add_gae_activation(env_dir):
         '\n'
         '# === GAEENV END ===\n')
 
-    activate_script = get_platform_relevant_path(env_dir)
+    activate_script = path_to_activate_script(env_dir)
     if not os.path.exists(activate_script):
         logger.error('Virtualenv activation script doesn\'t exist. Please ensure Virtualenv is activated')
     else:
@@ -85,7 +85,7 @@ def add_gae_activation(env_dir):
 
 
 def remove_gae_activation(env_dir):
-    activate_script = get_platform_relevant_path(env_dir)
+    activate_script = path_to_activate_script(env_dir)
     if not os.path.exists(activate_script):
         logger.error('Virtualenv activation script does\'t exist. Please ensure Virtualenv is activated')
     else:
@@ -98,7 +98,7 @@ def remove_gae_activation(env_dir):
             file.write(source_code)
 
 
-def get_platform_relevant_path(env_dir):
+def path_to_activate_script(env_dir):
     if os.name == 'nt':
         return os.path.join(env_dir, 'Scripts', 'activate')
     else:
