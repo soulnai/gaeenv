@@ -20,7 +20,7 @@ def winlink(source, link_name):
     flags = 0
     if source is not None and os.path.isdir(source):
         flags = 1
-    if source(link_name, source, flags) == 0:
+    if csl(link_name, source, flags) == 0:
         raise ctypes.WinError()
 
 
