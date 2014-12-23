@@ -8,12 +8,28 @@ from distutils.sysconfig import get_python_lib
 from utils import logger
 
 
-def list(req_file):
-	with open(req_file, 'r') as file:
-		requirements = [req for req in pkg_resources.parse_requirements(file.read())]
+def winlink(source, link_name):
+    '''symlink(source, link_name)
+       Creates a symbolic link pointing to source named link_name'''
 
-	for requirement in requirements:
-		print requirement
+    import ctypes
+    csl = ctypes.windll.kernel32.CreateSymbolicLinkW
+    csl.argtypes = (ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint32)
+    csl.restype = ctypes.c_ubyte
+
+    flags = 0
+    if source is not None and os.path.isdir(source):
+        flags = 1
+    if csl(link_name, source, flags) == 0:
+        raise ctypes.WinError()
+
+
+def list(req_file):
+    with open(req_file, 'r') as file:
+        requirements = [req for req in pkg_resources.parse_requirements(file.read())]
+
+    for requirement in requirements:
+        print requirement
 
 
 def link(req_file, lib_dir):
@@ -66,4 +82,11 @@ def link(req_file, lib_dir):
                                 logger.error(' * Unable to link [%s] because a file already exists at [%s]' % (pkg, sym_path))
                         else:
                                 logger.info(' * Linking [%s] in [%s]' % (pkg_path, sym_path))
-                                os.symlink(pkg_path, sym_path)
+                                make_symlink(pkg_path, sym_path)
+
+
+def make_symlink(pkg_path, sym_path):
+    if os.name == 'nt':
+        winlink(pkg_path, sym_path)
+    else:
+        os.symlink(pkg_path, sym_path)
