@@ -3,6 +3,7 @@ import re
 import sys
 import inspect
 import pkg_resources
+import pip
 
 from distutils.sysconfig import get_python_lib
 from utils import logger
@@ -25,11 +26,10 @@ def winlink(source, link_name):
 
 
 def list(req_file):
-    with open(req_file, 'r') as file:
-        requirements = [req for req in pkg_resources.parse_requirements(file.read())]
+    requirements = pip.req.parse_requirements(req_file)
 
     for requirement in requirements:
-        print requirement
+        print requirement.req
 
 
 def link(req_file, lib_dir):
