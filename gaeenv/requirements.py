@@ -33,12 +33,8 @@ def list(req_file):
 
 
 def link(req_file, lib_dir):
-    requirements = pip.req.parse_requirements(req_file)
-    all_installed_packages = pip.get_installed_distributions()
-
-    all_installed_packages__set = set(all_installed_packages)
-    all_requirements_set = set(requirements)
-    paths_to_link = []
+    all_requirements_set = set(pip.req.parse_requirements(req_file))
+    all_installed_packages__set = set(pip.get_installed_distributions())
 
     if not os.path.exists(lib_dir):
         os.makedirs(lib_dir)
@@ -55,7 +51,7 @@ def link(req_file, lib_dir):
             if requirement.req.key in package.key:
                 metadata_list = package._get_metadata("top_level.txt")
                 for folder_name in metadata_list:
-                    pkg_path = package.location + "\\" + folder_name
+                    pkg_path = os.path.join(package.location, folder_name)
                     pkg_name = folder_name
                     is_file = (not os.path.exists(pkg_path) and os.path.exists(pkg_path + '.py'))
                     if is_file:
@@ -65,8 +61,7 @@ def link(req_file, lib_dir):
                         continue
                     sym_path = os.path.join(lib_dir, pkg_name)
                     print "Package " + str(pkg_path) + " linking into " + sym_path
-                    make_symlink(str(pkg_path), sym_path)
-
+                    make_symlink(pkg_path, sym_path)
 
 
 def make_symlink(pkg_path, sym_path):
