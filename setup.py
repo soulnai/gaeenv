@@ -6,7 +6,7 @@ Google App Engine Virtual Environment builder.
 """
 import os
 from setuptools import setup, find_packages
-from gaeenv.main import gaeenv_version
+from gaeenv.version import gaeenv_version
 
 def read_file(file_name):
     return open(
