@@ -61,8 +61,6 @@ def link(req_file, lib_dir):
                     if is_file:
                         pkg_path = pkg_path +'.py'
                         pkg_name = pkg_name + '.py'
-                    else:
-                        paths_to_link.append(pkg_path)
                     if not os.path.exists(pkg_path):
                         continue
                     sym_path = os.path.join(lib_dir, pkg_name)
