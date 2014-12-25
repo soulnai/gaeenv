@@ -33,9 +33,36 @@ def list(req_file):
 
 
 def link(req_file, lib_dir):
-    all_requirements_set = set(pip.req.parse_requirements(req_file))
+    all_requirements_set = set(pip.req.parse_requirements(req_file) )
     all_installed_packages__set = set(pip.get_installed_distributions())
 
+    make_package_from_links_folder(lib_dir)
+
+    for package in all_installed_packages__set:
+        for requirement in all_requirements_set:
+            if requirement.req.key in package.key:
+                package_folders = get_package_folders_names(package)
+                for folder_name in package_folders:
+                    pkg_path = os.path.join(package.location, folder_name)
+                    pkg_name = folder_name
+                    is_file = (not os.path.exists(pkg_path) and os.path.exists(pkg_path + '.py'))
+                    if is_file:
+                        """
+                        Check if item that we want to link is a folder or a file. So we can build right link to it.
+                        """
+                        pkg_path = pkg_path +'.py'
+                        pkg_name = pkg_name + '.py'
+                    if not os.path.exists(pkg_path):
+                        continue
+                    sym_path = os.path.join(lib_dir, pkg_name)
+                    print "Package {} linking into {}".format(str(pkg_path), str(sym_path))
+                    make_symlink(str(pkg_path), sym_path)
+
+
+def make_package_from_links_folder(lib_dir):
+    """Creates folder where symlinks will be stored. And adds __init__.py for it.
+    :param lib_dir: Path to folder where symlinks will be stored.
+    """
     if not os.path.exists(lib_dir):
         os.makedirs(lib_dir)
 
@@ -46,22 +73,10 @@ def link(req_file, lib_dir):
                 "import os\n"
                 "sys.path.insert(0, os.path.dirname(__file__))\n"))
 
-    for package in all_installed_packages__set:
-        for requirement in all_requirements_set:
-            if requirement.req.key in package.key:
-                metadata_list = package._get_metadata("top_level.txt")
-                for folder_name in metadata_list:
-                    pkg_path = os.path.join(package.location, folder_name)
-                    pkg_name = folder_name
-                    is_file = (not os.path.exists(pkg_path) and os.path.exists(pkg_path + '.py'))
-                    if is_file:
-                        pkg_path = pkg_path +'.py'
-                        pkg_name = pkg_name + '.py'
-                    if not os.path.exists(pkg_path):
-                        continue
-                    sym_path = os.path.join(lib_dir, pkg_name)
-                    print "Package " + str(pkg_path) + " linking into " + sym_path
-                    make_symlink(pkg_path, sym_path)
+
+def get_package_folders_names(package):
+    return package._get_metadata("top_level.txt")
+
 
 
 def make_symlink(pkg_path, sym_path):

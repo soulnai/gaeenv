@@ -6,7 +6,7 @@ Google App Engine Virtual Environment builder.
 """
 import os
 from setuptools import setup, find_packages
-from gaeenv.version import gaeenv_version
+from gaeenv.version import __version__
 
 def read_file(file_name):
     return open(
@@ -21,7 +21,7 @@ ldesc += "\n\n" + read_file('CHANGES')
 
 setup(
     name='gaeenv',
-    version=gaeenv_version,
+    version=__version__,
     url='https://github.com/llinder/gaeenv',
     license='Apache 2.0',
     author='Lance Linder',
