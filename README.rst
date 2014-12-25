@@ -109,6 +109,9 @@ Install App Engine SDK "1.8.1"::
 
 Link all packages in requirements.txt into src/lib::
 
+    If you want to use in requirements.txt links like git+git://github.com/anglinb/python-crunchbase you should add egg name at the end of string.
+    I.e. git+git://github.com/anglinb/python-crunchbase#egg=crunchbase. It's required to make all links correct.
+
     $ . env/bin/activate
     (env)$ pip install -r requirements.txt
     (env)$ gaeenv install requirements -r requirements.txt
