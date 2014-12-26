@@ -85,7 +85,7 @@ def ensure_packages_have_names(all_requirements_set):
         if requirement.req is None:
             print("Requirement {} have not assigned package name and will not be linked. Please assign package name.")\
                 .format(str(requirement))
-            exit()
+            raise Exception("Linking interrupted!") 
 
 
 def _create_symlink_for_package_content(package, lib_dir):
