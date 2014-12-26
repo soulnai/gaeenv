@@ -4,6 +4,9 @@ Google App Engine virtual environment
 ``gaeenv`` (Google App Engine virtual environment) is a tool to integrate
 Google App Engine SDK into existing environments built by virtualenv_
 
+.. image:: https://travis-ci.org/soulnai/gaeenv.svg?branch=develop
+    :target: https://travis-ci.org/soulnai/gaeenv
+
 Install
 -------
 
