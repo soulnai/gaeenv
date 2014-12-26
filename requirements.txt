@@ -1,0 +1,5 @@
+mock==1.0.1
+pep8==1.5.7
+pytest==2.6.4
+requests==2.5.0
+git+https://github.com/soulnai/gaeenv.git@develop#egg=gaeenv
