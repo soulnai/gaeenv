@@ -37,14 +37,22 @@ def link(req_file, lib_dir):
     all_requirements_set = set(pip.req.parse_requirements(req_file) )
     all_installed_packages__set = set(pip.get_installed_distributions())
 
-    make_package_from_links_folder(lib_dir)
+    ensure_packages_have_names(all_requirements_set)
 
-    check_if_all_packages_has_names(all_requirements_set)
+    dependencies = []
+
+    for package in all_installed_packages__set:
+        dependencies += package.requires()
+
+    for package in all_installed_packages__set:
+        for dependency in dependencies:
+            if dependency.key in package.key:
+                _create_symlink_for_package_content(package, lib_dir)
 
     for package in all_installed_packages__set:
         for requirement in all_requirements_set:
             if requirement.req.key in package.key:
-                create_symlink_for_package_content(package, lib_dir)
+                _create_symlink_for_package_content(package, lib_dir)
 
 def make_package_from_links_folder(lib_dir):
     """Creates folder where symlinks will be stored. And adds __init__.py for it.
@@ -72,15 +80,15 @@ def make_symlink(pkg_path, sym_path):
         os.symlink(pkg_path, sym_path)
 
 
-def check_if_all_packages_has_names(all_requirements_set):
+def ensure_packages_have_names(all_requirements_set):
     for requirement in all_requirements_set:
-        if isinstance(requirement.req, NoneType):
+        if requirement.req is None:
             print("Requirement {} have not assigned package name and will not be linked. Please assign package name.")\
                 .format(str(requirement))
             exit()
 
 
-def create_symlink_for_package_content(package, lib_dir):
+def _create_symlink_for_package_content(package, lib_dir):
     package_folders = get_package_folders_names(package)
     for folder_name in package_folders:
         pkg_path = os.path.join(package.location, folder_name)
@@ -95,5 +103,7 @@ def create_symlink_for_package_content(package, lib_dir):
         if not os.path.exists(pkg_path):
             continue
         sym_path = os.path.join(lib_dir, pkg_name)
+        if os.path.exists(sym_path):
+            continue
         print "Package {} linking into {}".format(str(pkg_path), str(sym_path))
         make_symlink(str(pkg_path), sym_path)
