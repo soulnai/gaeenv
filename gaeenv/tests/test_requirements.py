@@ -34,8 +34,6 @@ def test_link_comparing_pip_installed():
     os.chdir('m:\\Projects\\.env')
     req_file = glob.glob('requirements.txt')[0]
 
-    print req_file
-
     # preparations
     if not os.path.isdir(test_dir):
         os.mkdir(test_dir)
@@ -61,4 +59,38 @@ def test_link_comparing_pip_installed():
         assert req in clean_links
 
 
+def test_winlink_file():
+    # given
+    req_file = glob.glob('requirements.txt')[0]
+    test_dir = 'test_dir\\'
+    link_file = test_dir + 'req'
 
+    if not os.path.isdir(test_dir):
+        os.mkdir(test_dir)
+
+    # execute
+    requirements.make_symlink(req_file, link_file)
+
+    # verify
+    assert os.path.exists(link_file)
+
+    # finalize
+    os.remove(link_file)
+
+
+def test_winlink_dirrectory():
+    # given
+    test_dir = 'test_dir\\'
+    link_file = test_dir + 'test_link.l'
+
+    if not os.path.isdir(test_dir):
+        os.mkdir(test_dir)
+
+    # execute
+    requirements.make_symlink(test_dir, link_file)
+
+    # verify
+    assert os.path.exists(link_file)
+
+    # finalize
+    os.removedirs(link_file)
