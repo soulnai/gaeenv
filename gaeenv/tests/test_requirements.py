@@ -92,8 +92,8 @@ def test_winlink_file():
 
 def test_winlink_dirrectory():
     # given
-    test_dir = 'test_dir\\'
-    link_file = test_dir + 'test_link.l'
+    test_dir = 'test_dir'
+    link_file = os.path.join(test_dir, "test_link.l")
 
     if not os.path.isdir(test_dir):
         os.mkdir(test_dir)
