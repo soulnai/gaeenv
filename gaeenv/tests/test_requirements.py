@@ -7,7 +7,6 @@ import glob
 import pip
 from gaeenv import requirements
 
-
 def test_list_print(capsys):
     # given
     data = 'qwerty\nasdfg'
@@ -30,13 +29,9 @@ def test_link_comparing_pip_installed():
     # given
     test_dir = "..\\..\\..\\test_dir\\"
     lib_dir = test_dir + 'lib_dir'
-    # req_file = 'm:\\Projects\\.env\\requirements.txt'
-    # os.chdir('m:\\Projects\\.env')
     path = os.path.dirname(__file__)
     print path
     print os.getcwd()
-    # path1 = os.path.abspath(os.path.join(path.split('\\')[:-2], '..'))
-    # os.chdir(os.path.join(path, '..'))
     os.chdir(path)
     print os.getcwd()
     os.chdir(os.path.dirname(os.getcwd()))
@@ -66,7 +61,6 @@ def test_link_comparing_pip_installed():
 
     # verify
     for req in requirements_name_set:
-        # if 'antlr' not in req and 'mock' not in req:
         if 'antlr' not in req:
             assert req in clean_links
 
@@ -89,7 +83,7 @@ def test_winlink_file():
     # finalize
     os.remove(link_file)
 
-
+@pytest.mark.skipif(os.name != 'nt', reason="test for Windows")
 def test_winlink_dirrectory():
     # given
     test_dir = 'test_dir'
