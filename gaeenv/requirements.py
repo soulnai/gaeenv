@@ -27,14 +27,14 @@ def winlink(source, link_name):
 
 
 def list(req_file):
-    requirements = pip.req.parse_requirements(req_file)
+    requirements = pip.req.parse_requirements(req_file, session=pip.download.PipSession())
 
     for requirement in requirements:
         print requirement.req
 
 
 def link(req_file, lib_dir):
-    all_requirements_set = set(pip.req.parse_requirements(req_file) )
+    all_requirements_set = set(pip.req.parse_requirements(req_file, session=pip.download.PipSession()) )
     all_installed_packages__set = set(pip.get_installed_distributions())
 
     ensure_packages_have_names(all_requirements_set)
