@@ -36,10 +36,10 @@ virtual environment built with virtualenv_ or virtualenv_wrapper_::
 If you want to work with the latest version of the gaeenv you can 
 install it from the github `repository`_::
 
-    $ git clone https://github.com/llinder/gaeenv.git
+    $ git clone https://github.com/soulnai/gaeenv.git@develop
     $ ./gaeenv/gaeenv/main.py --help
 
-.. _repository: https://github.com/llinder/gaeenv
+.. _repository: https://github.com/soulnai/gaeenv.git@develop
 .. _pip: http://pypi.python.org/pypi/pip
 .. _easy_install: http://pypi.python.org/pypi/setuptools
 
@@ -50,8 +50,10 @@ Dependency
 For gaeenv
 ^^^^^^^^^^^
 
+* pip == 1.5.6
 * python
 * requests
+
 
 Usage
 -----
@@ -114,6 +116,7 @@ Link all packages in requirements.txt into src/lib::
 
     If you want to use in requirements.txt links like git+git://github.com/anglinb/python-crunchbase you should add egg name at the end of string.
     I.e. git+git://github.com/anglinb/python-crunchbase#egg=crunchbase. It's required to make all links correct.
+    Also #egg name should be equal to at least one of names listed in top-level.txt in project that you want to link.
 
     $ . env/bin/activate
     (env)$ pip install -r requirements.txt
