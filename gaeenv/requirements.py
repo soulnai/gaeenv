@@ -90,6 +90,7 @@ def ensure_packages_have_names(all_requirements_set):
 
 def _create_symlink_for_package_content(package, lib_dir):
     package_folders = get_package_folders_names(package)
+    make_package_from_links_folder(lib_dir)
     for folder_name in package_folders:
         pkg_path = os.path.join(package.location, folder_name)
         pkg_name = folder_name
