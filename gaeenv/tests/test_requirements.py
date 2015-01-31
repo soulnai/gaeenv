@@ -49,7 +49,7 @@ def test_link_comparing_pip_installed():
 
     links = os.listdir(lib_dir)
     clean_links = map(lambda link: str(link.split('.')[0]), links)
-    all_requirements_set = set(pip.req.parse_requirements(req_file))
+    all_requirements_set = set(pip.req.parse_requirements(req_file, session=pip.download.PipSession()))
     requirements_name_set = map(lambda req: req.name.lower(), all_requirements_set)
 
     print "links:"
