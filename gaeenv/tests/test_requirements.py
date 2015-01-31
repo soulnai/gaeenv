@@ -7,19 +7,26 @@ import glob
 import pip
 from gaeenv import requirements
 
+test_dir = "..\\..\\..\\test_dir\\"
+path = os.path.dirname(__file__)
+os.chdir(path)
+os.chdir(os.path.dirname(os.getcwd()))
+os.chdir(os.path.dirname(os.getcwd()))
+cur_dir = os.getcwd()
+
+
 def test_list_print(capsys):
     # given
     data = 'qwerty\nasdfg'
-    file_name = 'c:\\temp\\test_file.txt'
-    f = open(file_name, 'w')
-    f.write(data)
-    f.close()
+    file_name = 'test_file.txt'
 
-     # execute
+    with open(file_name, 'w') as f:
+        f.write(data)
+
+    # execute
     requirements.list(file_name)
     out, err = capsys.readouterr()
     out = out.strip('\n')
-    # os.remove(file_name)
 
     # verify
     assert out == data
@@ -27,18 +34,8 @@ def test_list_print(capsys):
 
 def test_link_comparing_pip_installed():
     # given
-    test_dir = "..\\..\\..\\test_dir\\"
+
     lib_dir = test_dir + 'lib_dir'
-    path = os.path.dirname(__file__)
-    print path
-    print os.getcwd()
-    os.chdir(path)
-    print os.getcwd()
-    os.chdir(os.path.dirname(os.getcwd()))
-    os.chdir(os.path.dirname(os.getcwd()))
-    print os.getcwd()
-
-
     req_file = glob.glob('requirements.txt')[0]
 
     # preparations
@@ -49,9 +46,10 @@ def test_link_comparing_pip_installed():
 
     # execute
     requirements.link(req_file, lib_dir)
+
     links = os.listdir(lib_dir)
     clean_links = map(lambda link: str(link.split('.')[0]), links)
-    all_requirements_set = set(pip.req.parse_requirements(req_file, session=pip.download.PipSession()))
+    all_requirements_set = set(pip.req.parse_requirements(req_file))
     requirements_name_set = map(lambda req: req.name.lower(), all_requirements_set)
 
     print "links:"
@@ -61,14 +59,13 @@ def test_link_comparing_pip_installed():
 
     # verify
     for req in requirements_name_set:
-        if 'antlr' not in req:
-            assert req in clean_links
+        assert req in clean_links
 
 
 def test_winlink_file():
     # given
+
     req_file = glob.glob('requirements.txt')[0]
-    test_dir = 'test_dir\\'
     link_file = test_dir + 'req'
 
     if not os.path.isdir(test_dir):
@@ -82,6 +79,7 @@ def test_winlink_file():
 
     # finalize
     os.remove(link_file)
+
 
 @pytest.mark.skipif(os.name != 'nt', reason="test for Windows")
 def test_winlink_dirrectory():
@@ -100,3 +98,4 @@ def test_winlink_dirrectory():
 
     # finalize
     os.removedirs(link_file)
+
